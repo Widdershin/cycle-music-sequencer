@@ -4,7 +4,7 @@
   "description": "Play music with Observables!",
   "main": "index.js",
   "scripts": {
-    "start": "budo examples/index.js:bundle.js -- -t babelify | garnish",
+    "start": "budo examples/index.js:bundle.js --live -- -t babelify | garnish",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
