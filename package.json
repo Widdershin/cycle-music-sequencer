@@ -4,6 +4,7 @@
   "description": "Play music with Observables!",
   "main": "index.js",
   "scripts": {
+    "start": "budo examples/index.js:bundle.js -- -t babelify | garnish",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -25,5 +26,12 @@
   "homepage": "https://github.com/Widdershin/rx-audible",
   "dependencies": {
     "tone": "^0.6.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.3.17",
+    "babel-preset-es2015": "^6.3.13",
+    "babelify": "^7.2.0",
+    "budo": "^7.0.2",
+    "garnish": "^5.0.1"
   }
 }
