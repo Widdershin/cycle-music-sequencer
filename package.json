@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/Widdershin/rx-audible",
   "dependencies": {
+    "rxjs": "^5.0.0-beta.0",
     "tone": "^0.6.0"
   },
   "devDependencies": {
