@@ -5,11 +5,11 @@ Play music with Observables!
 Here's what usage might look like (not yet implemented):
 
 ```js
-  import {Observable} from 'rx';
+import {Observable} from 'rx';
   
-  Observable.interval(1000).audible('C4', '8n');
+Observable.interval(1000).audible('C4', '8n');
   
-  Observable.scale('C4', '8n');
+Observable.scale('C4', '8n');
   
-  Observable.scaleRange('c2', 'e4', 'major')
+Observable.scaleRange('c2', 'e4', 'major')
 ```
