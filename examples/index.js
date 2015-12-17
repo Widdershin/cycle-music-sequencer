@@ -38,10 +38,16 @@ function main ({DOM}) {
     .events("click")
     .map(event => togglePlaying);
 
+  const toggleCell$ = DOM
+    .select(".beat-cell")
+    .events("click")
+    .map(event => toggleCell(event.target))
+
   const beat$ = Observable.interval(bpm(120)).map(() => incrementBeat);
   const action$ = Observable.merge(
     beat$,
-    play$
+    play$,
+    toggleCell$
   )
   const state$ = action$.scan((state, action) => action(state), initialState).startWith(initialState);
 
@@ -58,6 +64,24 @@ function main ({DOM}) {
 
     music$: state$.distinctUntilChanged(state => state.beat).map(notesToPlay)
   };
+}
+
+function toggleCell(target) {
+  return function(state) {
+    const row = parseInt(target.dataset.row, 10);
+    const column = parseInt(target.dataset.column, 10);
+
+    const newScore = state.score.slice();
+    const newBeats = state.score[row].beats.slice()
+
+
+    newBeats[column] = state.score[row].beats[column] === 1 ? 0 : 1;
+    newScore[row] = {note: state.score[row].note, beats: newBeats}
+
+    state.score = newScore;
+
+    return state;
+  }
 }
 
 function togglePlaying(state) {
@@ -95,13 +119,13 @@ function renderScoreGrid(score, beatColumn) {
 function renderScoreRow({note, beats}, index, beatColumn) {
   return (
     h(".score-row", [
-      beats.map((beat, beatIndex) => renderBeatCell(beat, index, beatColumn === beatIndex)),
+      beats.map((beat, beatIndex) => renderBeatCell(beat, index, beatIndex, beatColumn === beatIndex)),
       h('.note-label', note)
     ])
   )
 }
 
-function renderBeatCell(cellEnabled, rowIndex, playing) {
+function renderBeatCell(cellEnabled, rowIndex, columnIndex, playing) {
   const enabled = cellEnabled === 1;
 
   const extraClass = [
@@ -110,7 +134,7 @@ function renderBeatCell(cellEnabled, rowIndex, playing) {
   ].join('');
 
   return (
-    h(".beat-cell" + extraClass)
+    h(".beat-cell" + extraClass, { dataset: { "row": rowIndex, "column": columnIndex }})
   )
 }
 
