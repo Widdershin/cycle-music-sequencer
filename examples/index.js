@@ -30,15 +30,14 @@ function main ({DOM}) {
     ],
     playing: true,
     beat: 2
-  }
+  };
 
   const state$ = Observable.just(initialState);
 
   return {
     DOM: state$.map(state =>
       h(".score", [
-        renderBeatMarkerRow(state.beat),
-        renderScoreGrid(state.score)
+        renderScoreGrid(state.score, state.beat)
       ])
     ),
 
@@ -46,32 +45,31 @@ function main ({DOM}) {
   };
 }
 
-function renderScoreGrid(score) {
+function renderScoreGrid(score, beatColumn) {
   return (
-    h(".score-grid", score.map(renderScoreRow))
+    h(".score-grid", score.map((score, index) => renderScoreRow(score, index, beatColumn)))
   )
 }
 
-function renderScoreRow({note, beats}) {
+function renderScoreRow({note, beats}, index, beatColumn) {
   return (
     h(".score-row", [
-      beats.map(renderBeatCell),
-      h('span.note-label', note)
+      beats.map((beat, beatIndex) => renderBeatCell(beat, index, beatColumn === beatIndex)),
+      h('.note-label', note)
     ])
   )
 }
 
-function renderBeatCell(cellEnabled) {
-  return  (
-    h("span.beat-cell", {style: {background: cellEnabled === 1 ? "pink" : ""}})
-  )
-}
+function renderBeatCell(cellEnabled, rowIndex, playing) {
+  const enabled = cellEnabled === 1;
 
-function renderBeatMarkerRow(beatOffset) {
+  const extraClass = [
+    enabled ? '.active' : '.inactive',
+    playing ? '.playing' : ''
+  ].join('');
+
   return (
-    h(".beat-marker-row", [
-      h(".beat-marker", {style: {left: 42 * beatOffset + "px"}}, "V")
-    ])
+    h(".beat-cell" + extraClass)
   )
 }
 

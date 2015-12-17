@@ -1,34 +1,110 @@
 html, body {
   margin: 0px;
+  background: black;
+  font-family: 'Arial';
+}
+
+.score {
+  margin: 20px;
+  margin-top: 60px;
 }
 
 .note-label {
-  padding: 30px;
-}
-
-.beat-cell {
-  padding: 10px 20px;
-  border: 1px solid white;
+  color: white;
 }
 
 .score-row {
   padding: 10px 0px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.score-row:nth-child(odd) {
-  background: lightgray;
+.beat-cell {
+  width: 45px;
+  height: 40px;
+
+  background: white;
+
+  opacity: 0.3;
+
+  border: 1px solid #202020;
+
+  transition: opacity 0.3s, box-shadow 0.3s;
 }
 
-.score-row:nth-child(even) {
-  background: #F1F1F1;
+.beat-cell.active {
+  opacity: 0.75;
 }
+
+.beat-cell.active.playing {
+  opacity: 1;
+}
+
+.beat-cell.playing.inactive {
+  opacity: 0.5;
+}
+
+.score-row:nth-child(n + 1) .beat-cell.active {
+  background: #BAD8F5;
+  box-shadow: 0px 2px 25px 0px #BAD8F5;
+}
+
+.score-row:nth-child(n + 2) .beat-cell.active {
+  background: #CFFFD8;
+  box-shadow: 0px 2px 25px 0px #CFFFD8;
+}
+
+.score-row:nth-child(n + 3) .beat-cell.active {
+  background: #FFD6C2;
+  box-shadow: 0px 2px 25px 0px #FFD6C2;
+}
+
+.score-row:nth-child(n + 4) .beat-cell.active {
+  background: #E8E3BC;
+  box-shadow: 0px 2px 25px 0px #E8E3BC;
+}
+
+.score-row:nth-child(n + 5) .beat-cell.active {
+  background: #EFC3F5;
+  box-shadow: 0px 2px 25px 0px #EFC3F5;
+}
+
+.score-row:nth-child(n + 1) .beat-cell.active.playing {
+  background: #BAD8F5;
+  box-shadow: 0px 2px 50px 0px #BAD8F5;
+}
+
+.score-row:nth-child(n + 2) .beat-cell.active.playing {
+  background: #CFFFD8;
+  box-shadow: 0px 2px 50px 0px #CFFFD8;
+}
+
+.score-row:nth-child(n + 3) .beat-cell.active.playing {
+  background: #FFD6C2;
+  box-shadow: 0px 2px 50px 0px #FFD6C2;
+}
+
+.score-row:nth-child(n + 4) .beat-cell.active.playing {
+  background: #E8E3BC;
+  box-shadow: 0px 2px 50px 0px #E8E3BC;
+}
+
+.score-row:nth-child(n + 5) .beat-cell.active.playing {
+  background: #EFC3F5;
+  box-shadow: 0px 2px 50px 0px #EFC3F5;
+}
+
 
 .beat-marker-row {
   height: 20px;
 }
 
+
 .beat-marker {
   position: absolute;
 
-  margin-left: 14px;
+  margin-left: 38px;
+  text-align: center;
+  color: white;
 }
