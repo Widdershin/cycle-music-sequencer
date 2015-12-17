@@ -26,9 +26,18 @@ function note (i) {
   return notes[noteIndex] + octave;
 }
 
-function main () {
+function main ({DOM}) {
+  const clickAdd = DOM.select(".add").events("click").map(event => 1);
+  const count = clickAdd.scan((total, change) => total + change).startWith(0);
+  count.forEach(i => synth.triggerAttackRelease(note(i + notes.length * 2), "4n"));
+
   return {
-    DOM: Observable.just(h(".hello-world", "Hello World"))
+    DOM: count.map(count =>
+      h(".counter", [
+        "Count: " + count,
+        h("button.add", "+")
+      ])
+    )
   };
 }
 
