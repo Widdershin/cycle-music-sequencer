@@ -32,7 +32,9 @@ function main ({DOM}) {
     beat: 2
   };
 
-  const state$ = Observable.just(initialState);
+
+  const action$ = Observable.interval(bpm(120)).map(() => incrementBeat);
+  const state$ = action$.scan((state, action) => action(state), initialState).startWith(initialState);
 
   return {
     DOM: state$.map(state =>
@@ -43,6 +45,16 @@ function main ({DOM}) {
 
     // music$: state$.map(note)
   };
+}
+
+function incrementBeat(state){
+  if (state.beat === state.score[0].beats.length - 1) {
+    state.beat = 0;
+  } else {
+    state.beat++;
+  }
+  console.log(state.beat);
+  return state;
 }
 
 function renderScoreGrid(score, beatColumn) {
