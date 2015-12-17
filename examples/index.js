@@ -4,6 +4,7 @@ import {run} from '@cycle/core';
 import {makeDOMDriver, h} from '@cycle/dom';
 
 const synth = new Tone.PolySynth(6, Tone.MonoSynth).toMaster();
+synth.set("volume", -10);
 const notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
 function bpm (tempo) {
@@ -28,22 +29,43 @@ function main ({DOM}) {
       {note: 'C3', beats: [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0]}
     ],
     playing: true,
-    beat: 2
+    beat: 0
   };
 
 
-  const action$ = Observable.interval(bpm(120)).map(() => incrementBeat);
+  const play$ = DOM
+    .select(".toggle-play")
+    .events("click")
+    .map(event => togglePlaying);
+
+  const beat$ = Observable.interval(bpm(120)).map(() => incrementBeat);
+  const action$ = Observable.merge(
+    beat$,
+    play$
+  )
   const state$ = action$.scan((state, action) => action(state), initialState).startWith(initialState);
 
   return {
     DOM: state$.map(state =>
       h(".score", [
+        h('.controls', [
+          h("button.toggle-play", state.playing ? "Pause" : "Play")
+        ]),
+
         renderScoreGrid(state.score, state.beat)
       ])
     ),
 
-    music$: state$.map(notesToPlay)
+    music$: state$.distinctUntilChanged(state => state.beat).map(notesToPlay)
   };
+}
+
+function togglePlaying(state) {
+   return Object.assign(
+    {},
+    state,
+    {playing: !state.playing}
+  );
 }
 
 function notesToPlay(state) {
@@ -53,6 +75,10 @@ function notesToPlay(state) {
 }
 
 function incrementBeat(state) {
+  if (!state.playing) {
+    return state;
+  }
+
   return Object.assign(
     {},
     state,

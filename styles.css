@@ -6,7 +6,7 @@ html, body {
 
 .score {
   margin: 20px;
-  margin-top: 60px;
+  margin-top: 30px;
 }
 
 .note-label {
@@ -107,4 +107,19 @@ html, body {
   margin-left: 38px;
   text-align: center;
   color: white;
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+}
+
+button {
+  height: 30px;
+
+  margin-bottom: 5px;
+
+  font-size: larger;
+
+  text-align: center;
 }
