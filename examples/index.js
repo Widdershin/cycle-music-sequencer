@@ -3,8 +3,7 @@ import {Observable} from 'rx';
 import {run} from '@cycle/core';
 import {makeDOMDriver, h} from '@cycle/dom';
 
-// const synth = new Tone.PolySynth(4, Tone.MonoSynth).toMaster();
-const synth = new Tone.SimpleSynth().toMaster();
+const synth = new Tone.PolySynth(6, Tone.MonoSynth).toMaster();
 const notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
 function bpm (tempo) {
@@ -21,12 +20,12 @@ function note (i) {
 function main ({DOM}) {
   const initialState = {
     score: [
-      {note: 'A4', beats: [0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
-      {note: 'G4', beats: [0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
-      {note: 'F4', beats: [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0]},
-      {note: 'E4', beats: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0]},
-      {note: 'D4', beats: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0]},
-      {note: 'C4', beats: [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0]}
+      {note: 'A3', beats: [0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
+      {note: 'G3', beats: [0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
+      {note: 'F3', beats: [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0]},
+      {note: 'E3', beats: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0]},
+      {note: 'D3', beats: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0]},
+      {note: 'C3', beats: [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0]}
     ],
     playing: true,
     beat: 2
@@ -43,18 +42,22 @@ function main ({DOM}) {
       ])
     ),
 
-    // music$: state$.map(note)
+    music$: state$.map(notesToPlay)
   };
 }
 
-function incrementBeat(state){
-  if (state.beat === state.score[0].beats.length - 1) {
-    state.beat = 0;
-  } else {
-    state.beat++;
-  }
-  console.log(state.beat);
-  return state;
+function notesToPlay(state) {
+  return state.score
+    .filter(scoreRow => scoreRow.beats[state.beat] === 1)
+    .map(scoreRow => scoreRow.note);
+}
+
+function incrementBeat(state) {
+  return Object.assign(
+    {},
+    state,
+    {beat: (state.beat + 1) % state.score[0].beats.length}
+  );
 }
 
 function renderScoreGrid(score, beatColumn) {
