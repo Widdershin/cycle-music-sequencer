@@ -98,7 +98,9 @@ function main ({DOM}) {
           renderPresetSelector(state)
         ]),
 
-        renderScoreGrid(state.score, state.beat)
+        renderScoreGrid(state.score, state.beat),
+
+        h('.instructions', 'Try clicking (or tapping) the squares!')
       ])
     ),
 
