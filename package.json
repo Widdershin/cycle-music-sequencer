@@ -1,15 +1,15 @@
 {
-  "name": "rx-audible",
+  "name": "cycle-music-sequencer",
   "version": "0.0.1",
   "description": "Play music with Observables!",
   "main": "index.js",
   "scripts": {
-    "start": "budo examples/index.js:bundle.js --live -- -t babelify | garnish",
+    "start": "budo index.js:bundle.js --live -- -t babelify | garnish",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Widdershin/rx-audible.git"
+    "url": "https://github.com/Widdershin/cycle-music-sequencer.git"
   },
   "keywords": [
     "music",
@@ -21,9 +21,9 @@
   "author": "Nick Johnstone & Rachel Collingridge",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Widdershin/rx-audible/issues"
+    "url": "https://github.com/Widdershin/cycle-music-sequencer/issues"
   },
-  "homepage": "https://github.com/Widdershin/rx-audible",
+  "homepage": "https://github.com/Widdershin/cycle-music-sequencer",
   "dependencies": {
     "rx": "^4.0.7",
     "tone": "^0.6.0"
