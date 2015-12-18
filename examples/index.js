@@ -41,13 +41,19 @@ function main ({DOM}) {
   const toggleCell$ = DOM
     .select(".beat-cell")
     .events("click")
-    .map(event => toggleCell(event.target))
+    .map(event => toggleCell(event.target));
+
+  const resetScore$ = DOM
+    .select(".reset-score")
+    .events("click")
+    .map(event => resetScore);
 
   const beat$ = Observable.interval(bpm(120)).map(() => incrementBeat);
   const action$ = Observable.merge(
     beat$,
     play$,
-    toggleCell$
+    toggleCell$,
+    resetScore$
   )
   const state$ = action$.scan((state, action) => action(state), initialState).startWith(initialState);
 
@@ -55,6 +61,7 @@ function main ({DOM}) {
     DOM: state$.map(state =>
       h(".score", [
         h('.controls', [
+          h("button.reset-score", "Reset"),
           h("button.toggle-play", state.playing ? "Pause" : "Play")
         ]),
 
@@ -82,6 +89,16 @@ function toggleCell(target) {
 
     return state;
   }
+}
+
+function resetScore(state) {
+  const newScore = state.score.map(({note, beats}) => ({note, beats: beats.map(beat => 0)}))
+
+  return Object.assign(
+    {},
+    state,
+    {score: newScore}
+  );
 }
 
 function togglePlaying(state) {
