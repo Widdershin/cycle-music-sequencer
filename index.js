@@ -65,10 +65,10 @@ function main ({DOM}) {
     .events("click")
     .map(event => toggleCell(event.target));
 
-  const resetScore$ = DOM
-    .select(".reset-score")
+  const clearScore$ = DOM
+    .select(".clear-score")
     .events("click")
-    .map(event => resetScore);
+    .map(event => clearScore);
 
   const loadPreset$ = DOM
     .select(".presets")
@@ -76,21 +76,25 @@ function main ({DOM}) {
     .map(event => loadPreset(event.target.value));
 
   const beat$ = Observable.interval(bpm(120)).map(() => incrementBeat);
+
   const action$ = Observable.merge(
     beat$,
     play$,
     toggleCell$,
-    resetScore$,
+    clearScore$,
     loadPreset$
-  )
-  const state$ = action$.scan((state, action) => action(state), initialState).startWith(initialState);
+  );
+
+  const state$ = action$
+    .scan((state, action) => action(state), initialState)
+    .startWith(initialState);
 
   return {
     DOM: state$.map(state =>
       h(".score", [
         h('.controls', [
-          h("button.reset-score", "Reset"),
           h("button.toggle-play", state.playing ? "Pause" : "Play"),
+          h("button.clear-score", "Clear"),
           renderPresetSelector(state)
         ]),
 
@@ -131,7 +135,7 @@ function toggleCell(target) {
   }
 }
 
-function resetScore(state) {
+function clearScore(state) {
   const newScore = state.score.map(({note, beats}) => ({note, beats: beats.map(beat => 0)}))
 
   return Object.assign(
