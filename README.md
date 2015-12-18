@@ -1,4 +1,3 @@
-[![Stories in Ready](https://badge.waffle.io/Widdershin/rx-audible.png?label=ready&title=Ready)](https://waffle.io/Widdershin/rx-audible)
 # cycle-music-sequencer
 An easy way to make melodies in your browser, powered by Cycle.js and Tone.js
 
