@@ -33,6 +33,10 @@ html, body {
   transition: opacity 0.3s, box-shadow 0.3s;
 }
 
+.beat-cell:nth-child(4n) {
+  margin-right: 20px;
+}
+
 .beat-cell.active {
   opacity: 0.70;
 }
