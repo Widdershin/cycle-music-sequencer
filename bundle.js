@@ -53,8 +53,8 @@ function main(_ref) {
     return toggleCell(event.target);
   });
 
-  var resetScore$ = DOM.select(".reset-score").events("click").map(function (event) {
-    return resetScore;
+  var clearScore$ = DOM.select(".clear-score").events("click").map(function (event) {
+    return clearScore;
   });
 
   var loadPreset$ = DOM.select(".presets").events("change").map(function (event) {
@@ -64,14 +64,16 @@ function main(_ref) {
   var beat$ = _rx.Observable.interval(bpm(120)).map(function () {
     return incrementBeat;
   });
-  var action$ = _rx.Observable.merge(beat$, play$, toggleCell$, resetScore$, loadPreset$);
+
+  var action$ = _rx.Observable.merge(beat$, play$, toggleCell$, clearScore$, loadPreset$);
+
   var state$ = action$.scan(function (state, action) {
     return action(state);
   }, initialState).startWith(initialState);
 
   return {
     DOM: state$.map(function (state) {
-      return (0, _dom.h)(".score", [(0, _dom.h)('.controls', [(0, _dom.h)("button.reset-score", "Reset"), (0, _dom.h)("button.toggle-play", state.playing ? "Pause" : "Play"), renderPresetSelector(state)]), renderScoreGrid(state.score, state.beat)]);
+      return (0, _dom.h)(".score", [(0, _dom.h)('.controls', [(0, _dom.h)("button.toggle-play", state.playing ? "Pause" : "Play"), (0, _dom.h)("button.clear-score", "Clear"), renderPresetSelector(state)]), renderScoreGrid(state.score, state.beat), (0, _dom.h)('.instructions', 'Try clicking (or tapping) the squares!')]);
     }),
 
     music$: state$.distinctUntilChanged(function (state) {
@@ -103,7 +105,7 @@ function toggleCell(target) {
   };
 }
 
-function resetScore(state) {
+function clearScore(state) {
   var newScore = state.score.map(function (_ref2) {
     var note = _ref2.note;
     var beats = _ref2.beats;
