@@ -30,7 +30,7 @@ html, body {
 
   border: 1px solid #202020;
 
-  transition: opacity 0.3s, box-shadow 0.3s;
+  transition: opacity 0.4s, box-shadow 0.4s;
 }
 
 .beat-cell:nth-child(4n) {
@@ -116,6 +116,8 @@ html, body {
 .controls {
   display: flex;
   justify-content: center;
+
+  margin: 4px;
 }
 
 button {
