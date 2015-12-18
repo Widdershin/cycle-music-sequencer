@@ -26,7 +26,7 @@ html, body {
 
   background: white;
 
-  opacity: 0.3;
+  opacity: 0.25;
 
   border: 1px solid #202020;
 
@@ -34,7 +34,7 @@ html, body {
 }
 
 .beat-cell.active {
-  opacity: 0.75;
+  opacity: 0.70;
 }
 
 .beat-cell.active.playing {
@@ -115,11 +115,34 @@ html, body {
 }
 
 button {
+  font-size: 1.0em;
+
+  background: azure;
+  color: #404050;
+
   height: 30px;
 
-  margin-bottom: 5px;
-
-  font-size: larger;
+  margin: 5px;
 
   text-align: center;
+
+  border: none;
+  border-radius: 3px;
+
+  box-shadow: 0px 2px 5px 0px lightblue;
+}
+
+select {
+  font-size: 1.0em;
+
+  background: azure;
+  color: #404050;
+
+  height: 30px;
+
+  margin: 5px;
+
+  border: none;
+
+  box-shadow: 0px 2px 5px 0px lightblue;
 }
