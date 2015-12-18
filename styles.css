@@ -28,9 +28,7 @@ html, body {
 
   opacity: 0.25;
 
-  border: 1px solid #202020;
-
-  transition: opacity 0.4s, box-shadow 0.4s;
+  transition: all 0.3s;
 }
 
 .beat-cell:nth-child(4n) {
@@ -43,6 +41,7 @@ html, body {
 
 .beat-cell.active.playing {
   opacity: 1;
+  transform: scale(1.05);
 }
 
 .beat-cell.playing.inactive {
