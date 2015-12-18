@@ -7,6 +7,35 @@ const synth = new Tone.PolySynth(6, Tone.MonoSynth).toMaster();
 synth.set("volume", -10);
 const notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 
+const presets = [
+  {
+    name: "Twinkle Twinkle",
+    score: [
+      {note: 'A3', beats: [0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
+      {note: 'G3', beats: [0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
+      {note: 'F3', beats: [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0]},
+      {note: 'E3', beats: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0]},
+      {note: 'D3', beats: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0]},
+      {note: 'C3', beats: [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0]}
+    ]
+  },
+  {
+    name: "Barcarolle",
+    score: [
+      {note: 'A3', beats: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
+      {note: 'G3', beats: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
+      {note: 'F3', beats: [0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1]},
+      {note: 'E3', beats: [1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0]},
+      {note: 'D3', beats: [0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 0, 0, 0, 1, 1, 1]},
+      {note: 'C3', beats: [1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0]},
+      {note: 'B2', beats: [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0]},
+      {note: 'A2', beats: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
+    ]
+  }
+]
+
+
+
 function bpm (tempo) {
   return (1000 * 60) / tempo;
 }
@@ -20,14 +49,7 @@ function note (i) {
 
 function main ({DOM}) {
   const initialState = {
-    score: [
-      {note: 'A3', beats: [0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
-      {note: 'G3', beats: [0, 0, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
-      {note: 'F3', beats: [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0]},
-      {note: 'E3', beats: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0]},
-      {note: 'D3', beats: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0]},
-      {note: 'C3', beats: [1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0]}
-    ],
+    score: presets[0].score,
     playing: true,
     beat: 0
   };
@@ -48,12 +70,18 @@ function main ({DOM}) {
     .events("click")
     .map(event => resetScore);
 
+  const loadPreset$ = DOM
+    .select(".presets")
+    .events("change")
+    .map(event => loadPreset(event.target.value));
+
   const beat$ = Observable.interval(bpm(120)).map(() => incrementBeat);
   const action$ = Observable.merge(
     beat$,
     play$,
     toggleCell$,
-    resetScore$
+    resetScore$,
+    loadPreset$
   )
   const state$ = action$.scan((state, action) => action(state), initialState).startWith(initialState);
 
@@ -62,7 +90,8 @@ function main ({DOM}) {
       h(".score", [
         h('.controls', [
           h("button.reset-score", "Reset"),
-          h("button.toggle-play", state.playing ? "Pause" : "Play")
+          h("button.toggle-play", state.playing ? "Pause" : "Play"),
+          renderPresetSelector(state)
         ]),
 
         renderScoreGrid(state.score, state.beat)
@@ -71,6 +100,17 @@ function main ({DOM}) {
 
     music$: state$.distinctUntilChanged(state => state.beat).map(notesToPlay)
   };
+}
+
+
+function loadPreset(value) {
+  return function(state) {
+    return Object.assign(
+      {},
+      state,
+      {score: presets[value].score, beat: 0}
+    );
+  }
 }
 
 function toggleCell(target) {
@@ -102,7 +142,7 @@ function resetScore(state) {
 }
 
 function togglePlaying(state) {
-   return Object.assign(
+  return Object.assign(
     {},
     state,
     {playing: !state.playing}
@@ -125,6 +165,14 @@ function incrementBeat(state) {
     state,
     {beat: (state.beat + 1) % state.score[0].beats.length}
   );
+}
+
+function renderPresetSelector(state) {
+  return (
+    h("select.presets", [
+      presets.map((preset, index) => h("option", { value: index }, preset.name))
+    ])
+  )
 }
 
 function renderScoreGrid(score, beatColumn) {
